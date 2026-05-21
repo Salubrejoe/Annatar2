@@ -18,5 +18,7 @@
 	<array>
 		<string>group.com.lorep.uk.Annatar2</string>
 	</array>
+	<key>com.apple.security.device.bluetooth</key>
+	<true/>
 </dict>
 </plist>

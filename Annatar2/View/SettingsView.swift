@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// App settings sheet. Currently houses:
-///   • A status banner for Bluetooth permission / power state.
-///   • An honest explanation of why AirPods + Apple Pencil don't appear.
-///   • App version / about.
+/// App settings sheet. Custom card-based layout — `Form` renders too
+/// densely on macOS and doesn't separate sections visually enough for
+/// what we want to communicate (especially the "AirPods can't show up"
+/// explanation, which is the whole point of this screen).
 struct SettingsView: View {
 
   @Environment(BluetoothScanner.self) private var scanner
@@ -11,10 +11,15 @@ struct SettingsView: View {
 
   var body: some View {
     NavigationStack {
-      Form {
-        bluetoothStatusSection
-        missingAccessoriesSection
-        aboutSection
+      ScrollView {
+        VStack(alignment: .leading, spacing: 16) {
+          if let banner = bluetoothBanner {
+            statusCard(banner)
+          }
+          accessoryInfoCard
+          aboutCard
+        }
+        .padding(20)
       }
       .navigationTitle("Settings")
       #if os(iOS) || os(visionOS)
@@ -26,67 +31,150 @@ struct SettingsView: View {
         }
       }
     }
+    #if os(macOS)
+    .frame(minWidth: 480, idealWidth: 520, minHeight: 540, idealHeight: 600)
+    #endif
   }
 }
 
 
-// MARK: - Sections
+// MARK: - Cards
 
 private extension SettingsView {
 
-  @ViewBuilder
-  var bluetoothStatusSection: some View {
+  func statusCard(_ banner: StatusBanner) -> some View {
+    HStack(alignment: .top, spacing: 12) {
+      Image(systemName: banner.icon)
+        .font(.title2)
+        .foregroundStyle(banner.tone.color)
+        .frame(width: 24)
+
+      VStack(alignment: .leading, spacing: 4) {
+        Text(banner.title)
+          .font(.headline)
+        if let detail = banner.detail {
+          Text(detail)
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+      }
+
+      Spacer(minLength: 0)
+    }
+    .padding(16)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(card)
+  }
+
+  var accessoryInfoCard: some View {
+    VStack(alignment: .leading, spacing: 12) {
+      HStack(spacing: 10) {
+        Image(systemName: "questionmark.circle.fill")
+          .font(.title2)
+          .foregroundStyle(.tint)
+          .frame(width: 24)
+        Text("Why aren't my AirPods showing?")
+          .font(.headline)
+      }
+
+      VStack(alignment: .leading, spacing: 10) {
+        Text("AirPods and Apple Pencil use Apple's private W1, H1, and H2 chip protocols. Third-party apps cannot read their battery — that's an OS-level restriction, not a permission you can toggle.")
+          .font(.callout)
+
+        Text("Annatar shows any Bluetooth accessory that exposes the standard battery service: keyboards, mice, trackpads, controllers, and most non-Apple headphones. If Apple ever publishes a public API for AirPods, they'll appear automatically.")
+          .font(.callout)
+          .foregroundStyle(.secondary)
+      }
+      .fixedSize(horizontal: false, vertical: true)
+      .padding(.leading, 34)
+    }
+    .padding(16)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(card)
+  }
+
+  var aboutCard: some View {
+    HStack(spacing: 12) {
+      Image(systemName: "minus.plus.batteryblock.stack.fill")
+        .font(.title)
+        .foregroundStyle(AngularGradient.annatarAccent)
+        .frame(width: 32)
+
+      VStack(alignment: .leading, spacing: 2) {
+        Text("Annatar")
+          .font(.headline)
+        Text("Version \(versionString)")
+          .font(.caption)
+          .foregroundStyle(.secondary)
+      }
+
+      Spacer(minLength: 0)
+    }
+    .padding(16)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(card)
+  }
+
+  var card: some View {
+    RoundedRectangle(cornerRadius: 14, style: .continuous)
+      .fill(.background.secondary)
+  }
+
+  var versionString: String {
+    let info = Bundle.main.infoDictionary
+    return info?["CFBundleShortVersionString"] as? String ?? "1.0"
+  }
+}
+
+
+// MARK: - Banner state
+
+private struct StatusBanner {
+  let icon: String
+  let title: String
+  let detail: String?
+  let tone: Tone
+
+  enum Tone {
+    case warning, info
+
+    var color: Color {
+      switch self {
+      case .warning: .orange
+      case .info:    .secondary
+      }
+    }
+  }
+}
+
+private extension SettingsView {
+
+  var bluetoothBanner: StatusBanner? {
     switch scanner.state {
     case .unauthorized:
-      Section {
-        Label("Bluetooth permission denied", systemImage: "exclamationmark.triangle.fill")
-          .foregroundStyle(.orange)
-        Text("Annatar can't see nearby Bluetooth accessories without this. Re-enable it in System Settings → Bluetooth → Annatar.")
-          .font(.callout)
-      }
+      StatusBanner(
+        icon: "exclamationmark.triangle.fill",
+        title: "Bluetooth permission denied",
+        detail: "Open System Settings → Privacy & Security → Bluetooth and turn Annatar on.",
+        tone: .warning
+      )
     case .poweredOff:
-      Section {
-        Label("Bluetooth is off", systemImage: "antenna.radiowaves.left.and.right.slash")
-          .foregroundStyle(.secondary)
-        Text("Turn Bluetooth on to see your nearby accessories.")
-          .font(.callout)
-      }
+      StatusBanner(
+        icon: "antenna.radiowaves.left.and.right.slash",
+        title: "Bluetooth is off",
+        detail: "Turn Bluetooth on to see your accessories.",
+        tone: .info
+      )
     case .unsupported:
-      Section {
-        Label("Bluetooth unavailable", systemImage: "antenna.radiowaves.left.and.right.slash")
-          .foregroundStyle(.secondary)
-      }
+      StatusBanner(
+        icon: "antenna.radiowaves.left.and.right.slash",
+        title: "Bluetooth unavailable",
+        detail: "Annatar hasn't been granted access to the Bluetooth radio. Check System Settings → Privacy & Security → Bluetooth — if Annatar isn't listed, run `tccutil reset Bluetooth com.lorep.uk.Annatar2` in Terminal and relaunch.",
+        tone: .warning
+      )
     case .scanning, .unknown:
-      EmptyView()
+      nil
     }
-  }
-
-  var missingAccessoriesSection: some View {
-    Section {
-      Text("AirPods and Apple Pencil use Apple's private W1, H1, and H2 chip protocols. Third-party apps cannot read their battery — that's an OS-level restriction, not a permission you can toggle.")
-        .font(.callout)
-      Text("Annatar shows any Bluetooth accessory that exposes the standard battery service: keyboards, mice, trackpads, controllers, and most non-Apple headphones. If Apple ever publishes a public API for AirPods, they'll appear automatically.")
-        .font(.callout)
-        .foregroundStyle(.secondary)
-    } header: {
-      Text("Why aren't my AirPods showing?")
-    }
-  }
-
-  var aboutSection: some View {
-    Section("About") {
-      HStack {
-        Text("Version")
-        Spacer()
-        Text(version)
-          .foregroundStyle(.secondary)
-      }
-    }
-  }
-
-  var version: String {
-    let info = Bundle.main.infoDictionary
-    let short = info?["CFBundleShortVersionString"] as? String ?? "1.0"
-    return short
   }
 }
