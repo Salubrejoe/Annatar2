@@ -1,14 +1,9 @@
 import SwiftUI
 import SwiftData
-#if canImport(BackgroundTasks)
-import BackgroundTasks
-#endif
-#if canImport(WatchKit)
 import WatchKit
-#endif
 
 @main
-struct Annatar2App: App {
+struct WatchAnnatar2App: App {
 
   @Environment(\.scenePhase) private var scenePhase
   private let modelContainer: ModelContainer
@@ -29,23 +24,8 @@ struct Annatar2App: App {
   }
 
   var body: some Scene {
-    #if os(macOS)
-    macScene
-    #else
-    primaryScene
-    #endif
-  }
-}
-
-
-// MARK: - Scenes
-
-#if !os(macOS)
-extension Annatar2App {
-
-  private var primaryScene: some Scene {
     WindowGroup {
-      MainView()
+      WatchMainView()
     }
     .modelContainer(modelContainer)
     .onChange(of: scenePhase) { _, phase in handleScenePhase(phase) }
@@ -54,32 +34,18 @@ extension Annatar2App {
     }
   }
 }
-#endif
-
-#if os(macOS)
-extension Annatar2App {
-
-  /// Placeholder. Will become a `MenuBarExtra` in a later round.
-  private var macScene: some Scene {
-    WindowGroup {
-      MainView()
-    }
-    .modelContainer(modelContainer)
-  }
-}
-#endif
 
 
 // MARK: - Lifecycle
 
-extension Annatar2App {
+extension WatchAnnatar2App {
 
   private func handleScenePhase(_ phase: ScenePhase) {
     switch phase {
     case .active:
       refreshNow()
     case .background:
-      refreshNow()                  // capture one last snapshot on the way out
+      refreshNow()
       scheduleBackgroundRefresh()
     default:
       break
@@ -97,17 +63,13 @@ extension Annatar2App {
     scheduleBackgroundRefresh()
   }
 
+  /// watchOS uses `WKExtension` instead of `BGTaskScheduler`. Same intent,
+  /// different ceremony.
   private func scheduleBackgroundRefresh() {
-    #if os(iOS) || os(visionOS)
-    let request = BGAppRefreshTaskRequest(identifier: AnnatarSchema.backgroundTaskID)
-    request.earliestBeginDate = .now.addingTimeInterval(15 * 60)
-    try? BGTaskScheduler.shared.submit(request)
-    #elseif os(watchOS)
     WKExtension.shared().scheduleBackgroundRefresh(
       withPreferredDate: .now.addingTimeInterval(15 * 60),
       userInfo: nil,
       scheduledCompletion: { _ in }
     )
-    #endif
   }
 }

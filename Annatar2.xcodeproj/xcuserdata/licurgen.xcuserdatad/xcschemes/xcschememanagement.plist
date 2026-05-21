@@ -7,7 +7,45 @@
 		<key>Annatar2.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>ComplicationsAnnatar2Extension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>WatchAnnatar2 Watch App.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>WidgetAnnatar2Extension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>7C9193232FBEF39C008B2E1F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7C91935C2FBF0959008B2E1F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7C91936F2FBF0981008B2E1F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7C91938F2FBF0990008B2E1F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
