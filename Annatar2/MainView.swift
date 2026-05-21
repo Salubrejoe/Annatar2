@@ -7,6 +7,8 @@ import UIKit
 struct MainView: View {
 
   @Environment(\.modelContext) private var context
+  @Environment(BluetoothScanner.self) private var scanner
+
   @Query(sort: [SortDescriptor(\Device.capturedAt, order: .reverse)])
   private var devices: [Device]
 
@@ -25,6 +27,8 @@ struct MainView: View {
   /// alert. A name (not an id) so the alert message can read naturally.
   @State private var unreachableDeviceName: String?
 
+  @State private var showingSettings = false
+
   /// How long to wait for a response before declaring the device
   /// unreachable. CloudKit silent-push round-trip is usually 1–5s, so 15s
   /// is generous enough that a brief delay isn't mis-classified.
@@ -33,22 +37,19 @@ struct MainView: View {
   var body: some View {
     NavigationStack {
       ScrollView {
-        LazyVGrid(columns: columns, spacing: spacing) {
-          ForEach(devices) { device in
-            if let identity = device.identity {
-              cell(for: device, identity: identity)
-            }
+        VStack(spacing: 24) {
+          devicesGrid
+          if !scanner.accessories.isEmpty {
+            accessoriesSection
           }
         }
-        .frame(maxWidth: maxGridWidth)
-        .frame(maxWidth: .infinity)
         .padding()
       }
       .navigationTitle("Annatar")
-      .toolbar {
-        Button("Refresh") {
-          try? DeviceWriter.refresh(in: context)
-        }
+      .toolbar { toolbarContent }
+      .sheet(isPresented: $showingSettings) {
+        SettingsView()
+          .environment(scanner)
       }
     }
     .onChange(of: devices) { _, newDevices in
@@ -66,6 +67,56 @@ struct MainView: View {
 }
 
 
+// MARK: - Sections
+
+private extension MainView {
+
+  var devicesGrid: some View {
+    LazyVGrid(columns: columns, spacing: spacing) {
+      ForEach(devices) { device in
+        if let identity = device.identity {
+          cell(for: device, identity: identity)
+        }
+      }
+    }
+    .frame(maxWidth: maxGridWidth)
+    .frame(maxWidth: .infinity)
+  }
+
+  var accessoriesSection: some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Text("Accessories")
+        .font(.headline)
+        .padding(.horizontal, 4)
+
+      VStack(spacing: 8) {
+        ForEach(scanner.accessories) { accessory in
+          AccessoryRow(accessory: accessory)
+        }
+      }
+    }
+    .frame(maxWidth: maxGridWidth)
+    .frame(maxWidth: .infinity)
+  }
+
+  @ToolbarContentBuilder
+  var toolbarContent: some ToolbarContent {
+    ToolbarItem {
+      Button {
+        showingSettings = true
+      } label: {
+        Image(systemName: "gear")
+      }
+    }
+    ToolbarItem {
+      Button("Refresh") {
+        try? DeviceWriter.refresh(in: context)
+      }
+    }
+  }
+}
+
+
 // MARK: - Cell
 
 private extension MainView {
@@ -77,9 +128,10 @@ private extension MainView {
       tap(device, identity: identity)
     } label: {
       DeviceCell(identity: identity, battery: device.battery)
+        .padding()
         .frame(width: cellSize, height: cellSize)
         .background(
-          RoundedRectangle(cornerRadius: 32, style: .continuous)
+          RoundedRectangle(cornerRadius: 28, style: .continuous)
             .fill(.background.secondary)
         )
         .overlay(pendingOverlay(visible: pending))
@@ -92,7 +144,7 @@ private extension MainView {
   func pendingOverlay(visible: Bool) -> some View {
     if visible {
       ZStack {
-        RoundedRectangle(cornerRadius: 32, style: .continuous)
+        RoundedRectangle(cornerRadius: 28, style: .continuous)
           .fill(.background.tertiary)
         ProgressView()
       }
@@ -176,4 +228,5 @@ private extension MainView {
 #Preview {
   MainView()
     .modelContainer(AnnatarSchema.makePreviewContainer())
+    .environment(BluetoothScanner())
 }

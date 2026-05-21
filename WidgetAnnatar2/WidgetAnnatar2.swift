@@ -84,7 +84,7 @@ struct BatteryWidgetEntryView: View {
 
   var body: some View {
     DeviceCell(identity: entry.identity, battery: entry.battery)
-          .padding(-12)
+          
   }
 }
 

@@ -15,6 +15,7 @@ struct Annatar2App: App {
   private let batteryEvents: BatteryEvents
   private let refreshRequestListener: RefreshRequestListener
   private let widgetReloader: WidgetReloader
+  private let bluetoothScanner: BluetoothScanner
 
   init() {
     do {
@@ -23,6 +24,7 @@ struct Annatar2App: App {
       self.batteryEvents = BatteryEvents(modelContainer: container)
       self.refreshRequestListener = RefreshRequestListener(modelContainer: container)
       self.widgetReloader = WidgetReloader()
+      self.bluetoothScanner = BluetoothScanner()
     } catch {
       fatalError("Could not open Annatar store: \(error)")
     }
@@ -48,6 +50,7 @@ extension Annatar2App {
       MainView()
     }
     .modelContainer(modelContainer)
+    .environment(bluetoothScanner)
     .onChange(of: scenePhase) { _, phase in handleScenePhase(phase) }
     .backgroundTask(.appRefresh(AnnatarSchema.backgroundTaskID)) {
       await refreshInBackground()
@@ -65,6 +68,7 @@ extension Annatar2App {
       MainView()
     }
     .modelContainer(modelContainer)
+    .environment(bluetoothScanner)
   }
 }
 #endif
@@ -78,6 +82,7 @@ extension Annatar2App {
     switch phase {
     case .active:
       refreshNow()
+      bluetoothScanner.refresh()
     case .background:
       refreshNow()                  // capture one last snapshot on the way out
       scheduleBackgroundRefresh()

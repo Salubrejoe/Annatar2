@@ -652,6 +652,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Annatar2/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -698,6 +699,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Annatar2/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -742,6 +744,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WatchAnnatar2-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchAnnatar2;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.lorep.uk.Annatar2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -777,6 +780,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WatchAnnatar2-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchAnnatar2;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.lorep.uk.Annatar2;
 				LD_RUNPATH_SEARCH_PATHS = (

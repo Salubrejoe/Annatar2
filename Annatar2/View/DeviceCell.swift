@@ -21,30 +21,31 @@ struct DeviceCell: View {
         isStale:        battery.isStale,
         modelImageName: identity.model.systemImageName
       )
-      .frame(maxWidth: 48, maxHeight: 48, alignment: .leading)
+      .frame(width: 52, height: 52)
       .frame(maxWidth: .infinity, alignment: .leading)
 
-      Spacer(minLength: 0)
+      Spacer(minLength: 4)
 
-      VStack(alignment: .leading, spacing: 2) {
+      VStack(alignment: .leading, spacing: 1) {
 
         Text(percentLabel)
-          .font(.title)
+          .font(.title2)
           .fontDesign(.monospaced)
+          .fontWeight(.semibold)
           .contentTransition(.numericText())
 
-        HStack(alignment: .firstTextBaseline, spacing: 4) {
-          Text(identity.name)
-            .font(.body)
-            .lineLimit(1)
+        Text(identity.name)
+          .font(.callout)
+          .lineLimit(1)
+          .minimumScaleFactor(0.7)
+          .truncationMode(.tail)
 
-          Text(battery.displayUpdatedAt)
-            .font(.footnote)
-            .foregroundStyle(updatedAtStyle)
-        }
+        Text(battery.displayUpdatedAt)
+          .font(.caption2)
+          .foregroundStyle(updatedAtStyle)
       }
     }
-    .padding()
+    
   }
 }
 
@@ -70,13 +71,13 @@ private extension DeviceCell {
 // MARK: - Preview
 
 #Preview("Cell") {
-  let identity = DeviceIdentity(id: UUID(), hardwareID: "iPhone16,2")
+  let identity = DeviceIdentity(id: UUID(), hardwareID: "Mac15,3")
   let reading  = BatteryReading(level: 0.67, state: .charging, capturedAt: .now)
 
-  DeviceCell(identity: identity, battery: reading)
-    .frame(width: 170, height: 170)
+  return DeviceCell(identity: identity, battery: reading)
+    .frame(width: 158, height: 158)
     .background(
-      RoundedRectangle(cornerRadius: 20, style: .continuous)
+      RoundedRectangle(cornerRadius: 28, style: .continuous)
         .fill(.background.secondary)
     )
     .padding()
