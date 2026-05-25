@@ -18,7 +18,7 @@ enum AnnatarSchema {
   /// under `BGTaskSchedulerPermittedIdentifiers` for iOS/iPadOS/visionOS.
   static let backgroundTaskID  = "com.lorep.uk.Annatar2.refresh"
 
-  static let schema = Schema([Device.self])
+  static let schema = Schema([Device.self, LogEvent.self])
 
   /// Production container: app-group-shared, CloudKit-private-DB-backed.
   static func makeContainer() throws -> ModelContainer {

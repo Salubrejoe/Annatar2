@@ -108,11 +108,6 @@ private extension MainView {
         Image(systemName: "gear")
       }
     }
-    ToolbarItem {
-      Button("Refresh") {
-        try? DeviceWriter.refresh(in: context)
-      }
-    }
   }
 }
 

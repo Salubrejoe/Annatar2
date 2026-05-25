@@ -44,12 +44,19 @@ extension WatchAnnatar2App {
     switch phase {
     case .active:
       refreshNow()
+      logEvent { EventLogger.logForeground(in: $0) }
     case .background:
       refreshNow()
       scheduleBackgroundRefresh()
+      logEvent { EventLogger.logBackground(in: $0) }
     default:
       break
     }
+  }
+
+  private func logEvent(_ work: (ModelContext) -> Void) {
+    let context = ModelContext(modelContainer)
+    work(context)
   }
 
   private func refreshNow() {

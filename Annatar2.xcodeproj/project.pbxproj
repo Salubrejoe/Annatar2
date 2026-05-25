@@ -126,9 +126,12 @@
 				Model/DeviceModel.swift,
 				Model/DeviceSelectionIntent.swift,
 				Model/DeviceWriter.swift,
+				Model/EventLogger.swift,
 				Model/Hardware.swift,
 				Model/LocalDevice.swift,
 				Model/LocalDeviceReader.swift,
+				Model/LogEvent.swift,
+				Model/LogEventKind.swift,
 				Model/MarketingNames.swift,
 				Model/RefreshRequestListener.swift,
 				Model/WidgetReloader.swift,
@@ -149,9 +152,12 @@
 				Model/DeviceModel.swift,
 				Model/DeviceSelectionIntent.swift,
 				Model/DeviceWriter.swift,
+				Model/EventLogger.swift,
 				Model/Hardware.swift,
 				Model/LocalDevice.swift,
 				Model/LocalDeviceReader.swift,
+				Model/LogEvent.swift,
+				Model/LogEventKind.swift,
 				Model/MarketingNames.swift,
 				Model/RefreshRequestListener.swift,
 				Model/WidgetReloader.swift,
@@ -172,9 +178,12 @@
 				Model/DeviceModel.swift,
 				Model/DeviceSelectionIntent.swift,
 				Model/DeviceWriter.swift,
+				Model/EventLogger.swift,
 				Model/Hardware.swift,
 				Model/LocalDevice.swift,
 				Model/LocalDeviceReader.swift,
+				Model/LogEvent.swift,
+				Model/LogEventKind.swift,
 				Model/MarketingNames.swift,
 				Model/RefreshRequestListener.swift,
 				Model/WidgetReloader.swift,
@@ -652,7 +661,9 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Annatar2/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "Annatar reads battery level from connected Bluetooth accessories.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -699,7 +710,9 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Annatar2/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "Annatar reads battery level from connected Bluetooth accessories.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Annatar reads battery level from connected Bluetooth accessories.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

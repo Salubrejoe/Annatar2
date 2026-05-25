@@ -42,12 +42,19 @@ struct Annatar2App: App {
 
 // MARK: - Scenes
 
-#if !os(macOS)
+#if os(iOS) || os(visionOS)
 extension Annatar2App {
 
   private var primaryScene: some Scene {
     WindowGroup {
-      MainView()
+      TabView {
+        Tab("Devices", systemImage: "rectangle.stack.fill") {
+          MainView()
+        }
+        Tab("Activity", systemImage: "clock.arrow.circlepath") {
+          LogView()
+        }
+      }
     }
     .modelContainer(modelContainer)
     .environment(bluetoothScanner)
@@ -69,6 +76,7 @@ extension Annatar2App {
     }
     .modelContainer(modelContainer)
     .environment(bluetoothScanner)
+    .onChange(of: scenePhase) { _, phase in handleScenePhase(phase) }
   }
 }
 #endif
@@ -83,9 +91,11 @@ extension Annatar2App {
     case .active:
       refreshNow()
       bluetoothScanner.refresh()
+      logEvent { context in EventLogger.logForeground(in: context) }
     case .background:
       refreshNow()                  // capture one last snapshot on the way out
       scheduleBackgroundRefresh()
+      logEvent { context in EventLogger.logBackground(in: context) }
     default:
       break
     }
@@ -100,6 +110,11 @@ extension Annatar2App {
     let context = ModelContext(modelContainer)
     try? DeviceWriter.refresh(in: context)
     scheduleBackgroundRefresh()
+  }
+
+  private func logEvent(_ work: (ModelContext) -> Void) {
+    let context = ModelContext(modelContainer)
+    work(context)
   }
 
   private func scheduleBackgroundRefresh() {

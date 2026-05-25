@@ -132,6 +132,7 @@ struct WatchCell: View {
           .foregroundStyle(.secondary)
       }
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
     .padding(.horizontal, 4)
   }
 

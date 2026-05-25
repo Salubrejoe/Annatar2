@@ -24,6 +24,11 @@ enum DeviceWriter {
     device.refreshRequestedAt = nil
 
     try context.save()
+    EventLogger.logPost(
+      level: snapshot.battery.level,
+      state: snapshot.battery.state,
+      in: context
+    )
     WidgetCenter.shared.reloadAllTimelines()
     return device
   }
@@ -39,6 +44,7 @@ enum DeviceWriter {
     guard let device = try context.fetch(descriptor).first else { return }
     device.refreshRequestedAt = .now
     try context.save()
+    EventLogger.logRefreshRequested(targetDeviceID: deviceID, in: context)
   }
 
   /// Delete a tracked device from this device's store. CloudKit will
