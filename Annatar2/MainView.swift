@@ -109,7 +109,7 @@ private extension MainView {
       Button {
         showingSettings = true
       } label: {
-        Image(systemName: "gear")
+        Image(systemName: "info.circle")
       }
     }
   }

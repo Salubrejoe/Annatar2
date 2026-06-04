@@ -69,14 +69,15 @@ extension Annatar2App {
 #if os(macOS)
 extension Annatar2App {
 
-  /// Placeholder. Will become a `MenuBarExtra` in a later round.
   private var macScene: some Scene {
-    WindowGroup {
-      MainView()
+    MenuBarExtra {
+      MacMenuBarView()
+        .modelContainer(modelContainer)
+        .environment(bluetoothScanner)
+    } label: {
+      Image(systemName: "minus.plus.batteryblock.stack.fill")
     }
-    .modelContainer(modelContainer)
-    .environment(bluetoothScanner)
-    .onChange(of: scenePhase) { _, phase in handleScenePhase(phase) }
+    .menuBarExtraStyle(.window)
   }
 }
 #endif
