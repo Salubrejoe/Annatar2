@@ -40,9 +40,11 @@ struct DeviceCell: View {
           .minimumScaleFactor(0.7)
           .truncationMode(.tail)
 
-        Text(battery.displayUpdatedAt)
-          .font(.caption2)
-          .foregroundStyle(updatedAtStyle)
+        TimelineView(.periodic(from: .now, by: 60)) { _ in
+          Text(battery.displayUpdatedAt)
+            .font(.caption2)
+            .foregroundStyle(updatedAtStyle)
+        }
       }
     }
     

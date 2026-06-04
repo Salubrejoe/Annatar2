@@ -52,6 +52,10 @@ struct MainView: View {
           .environment(scanner)
       }
     }
+    .onAppear {
+      try? DeviceWriter.refresh(in: context)
+      scanner.refresh()
+    }
     .onChange(of: devices) { _, newDevices in
       pruneSucceededRequests(in: newDevices)
     }

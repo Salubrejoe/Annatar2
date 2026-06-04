@@ -320,10 +320,10 @@ extension ShapeStyle where Self == LinearGradient {
   static var gaugeLineGradient: LinearGradient {
     LinearGradient(
       stops: [
-        .init(color: .pink,   location: 0.0),
-        .init(color: .purple, location: 0.35),
-        .init(color: .blue,   location: 0.7),
-        .init(color: .indigo, location: 1.0),
+        .init(color: .indigo,   location: 0.0),
+        .init(color: .blue, location: 0.35),
+        .init(color: .purple,   location: 0.7),
+        .init(color: .pink, location: 1.0),
       ],
       startPoint: .top,
       endPoint: .bottom
